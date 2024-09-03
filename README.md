@@ -1,5 +1,5 @@
 # nomad-setup-guide
-Guide for installing Nomad, creating a local cluster, and deploying/updating an example application.
+Guide for installing Nomad, creating a local cluster, and deploying an example application.
 ## 1. [Install Nomad](https://developer.hashicorp.com/nomad/tutorials/get-started/gs-install)
 
 1. **Install the required packages:**
@@ -93,3 +93,6 @@ $ nomad job dispatch -meta budget="200" pytechco-setup
 $ nomad job run pytechco-employee.nomad.hcl
 
 8. **Navigate to the Nomad UI, click on the Jobs page, and then click on the pytechco-employee job. Since this is a cron batch job, you can see that it creates a new job every three seconds.**
+
+## 8. Resources:
+[Nomad documentation](https://developer.hashicorp.com/nomad/tutorials/get-started/gs-overview)
