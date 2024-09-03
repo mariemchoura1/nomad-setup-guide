@@ -53,14 +53,9 @@ $ nomad node status
 ## 5. Browse the web UI
 Navigate to the Nomad UI in your web browser by visiting http://localhost:4646/ui(opens in new tab).
 
-## 6. [Deploy a job](https://developer.hashicorp.com/nomad/tutorials/get-started/gs-deploy-job)
-you will deploy and update an example application. In the process, you will learn about the Nomad job specification.
-
-The example application runs in Docker containers and consists of a database and a web frontend that reads from the database. You will set up the database with a parameterized batch job and then use a periodic batch job to start additional short-lived jobs that write data to the database.
-
-1. **Navigate to the jobs directory of the example repository on your local machine:**
+## 6. Review the example application
+**Navigate to the jobs directory of the example repository on your local machine:**
 $ cd jobs
-
 
 Each of the jobspec files below that make up the application sets the driver attribute to docker and specifies an image stored on the GitHub Container Registry in the config block with the image attribute. The Redis job is the exception as it uses an official Redis image hosted on Docker Hub. By default, Nomad looks for images on Docker Hub so the full path including https:// is not necessary for the Redis job.
 
@@ -72,25 +67,29 @@ Each of the jobspec files below that make up the application sets the driver att
 
 **[pytechco-employee.nomad.hcl](https://developer.hashicorp.com/nomad/tutorials/get-started/gs-deploy-job#pytechco-employee-nomad-hcl)** - This periodic batch job brings an employee online. It randomizes the employee's job type and other variables such as how long they work for and the rate at which they complete their tasks. The jobspec sets the type to batch and has a periodic block that sets the cron attribute to a value that will allow it to start a new job every 3 seconds.
 
-2. **Deploy the application** **Submit the database job:**
+## 7. [Deploy a job](https://developer.hashicorp.com/nomad/tutorials/get-started/gs-deploy-job)
+you will deploy and update an example application. In the process, you will learn about the Nomad job specification.
+
+The example application runs in Docker containers and consists of a database and a web frontend that reads from the database. You will set up the database with a parameterized batch job and then use a periodic batch job to start additional short-lived jobs that write data to the database.
+2. **Submit the database job:**
 $ nomad job run pytechco-redis.nomad.hcl
 
-**Submit the webapp frontend job:**
+3. **Submit the webapp frontend job:**
 $ nomad job run pytechco-web.nomad.hcl
 
-**Run the command to get the IP address of the node where the job is running:**
+4. **Run the command to get the IP address of the node where the job is running:**
 $ nomad node status -verbose \
     $(nomad job allocs pytechco-web | grep -i running | awk '{print $2}') | \
     grep -i ip-address | awk -F "=" '{print $2}' | xargs | \
     awk '{print "http://"$1":5000"}'
 
-**Submit the setup job:**
+5. **Submit the setup job:**
 $ nomad job run pytechco-setup.nomad.hcl
 
-**Dispatch the setup job by providing a value for budget:**
+6. **Dispatch the setup job by providing a value for budget:**
 $ nomad job dispatch -meta budget="200" pytechco-setup
 
-**Submit the employee job:**
+7. **Submit the employee job:**
 $ nomad job run pytechco-employee.nomad.hcl
 
-Navigate to the Nomad UI, click on the Jobs page, and then click on the pytechco-employee job. Since this is a cron batch job, you can see that it creates a new job every three seconds.
+8. **Navigate to the Nomad UI, click on the Jobs page, and then click on the pytechco-employee job. Since this is a cron batch job, you can see that it creates a new job every three seconds.**
