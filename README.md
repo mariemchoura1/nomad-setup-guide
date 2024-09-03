@@ -12,3 +12,5 @@ Install the required packages.
  4. **Update and install Nomad**
     sudo apt-get update && sudo apt-get install nomad
 
+5. **Download** the Nomad binary from [Nomad Downloads](https://www.nomadproject.io/downloads).
+
