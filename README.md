@@ -67,7 +67,7 @@ Each of the jobspec files below that make up the application sets the driver att
 
 **[pytechco-employee.nomad.hcl](https://developer.hashicorp.com/nomad/tutorials/get-started/gs-deploy-job#pytechco-employee-nomad-hcl)** - This periodic batch job brings an employee online. It randomizes the employee's job type and other variables such as how long they work for and the rate at which they complete their tasks. The jobspec sets the type to batch and has a periodic block that sets the cron attribute to a value that will allow it to start a new job every 3 seconds.
 
-## 7. [Deploy a job](https://developer.hashicorp.com/nomad/tutorials/get-started/gs-deploy-job)
+## 7. [Deploy the application](https://developer.hashicorp.com/nomad/tutorials/get-started/gs-deploy-job)
 you will deploy and update an example application. In the process, you will learn about the Nomad job specification.
 
 The example application runs in Docker containers and consists of a database and a web frontend that reads from the database. You will set up the database with a parameterized batch job and then use a periodic batch job to start additional short-lived jobs that write data to the database.
