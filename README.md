@@ -1,8 +1,8 @@
 # nomad-setup-guide
 Guide for installing Nomad, creating a local cluster, and deploying an example application.
 ## 1. Install Nomad
-Install the required packages.
-1. **Installthe required packages:**
+
+1. **Install the required packages:**
    sudo apt-get update && \
    sudo apt-get install wget gpg coreutils
 2. **Add the HashiCorp GPG key:**
@@ -53,4 +53,24 @@ nomad node status
 ## 5. Browse the web UI
 Navigate to the Nomad UI in your web browser by visiting http://localhost:4646/ui(opens in new tab).
 
+## 6. Deploy and update a job
+you will deploy and update an example application. In the process, you will learn about the Nomad job specification.
 
+The example application runs in Docker containers and consists of a database and a web frontend that reads from the database. You will set up the database with a parameterized batch job and then use a periodic batch job to start additional short-lived jobs that write data to the database.
+
+1. **Navigate to the jobs directory of the example repository on your local machine:**
+cd jobs
+
+
+Each of the jobspec files below that make up the application sets the driver attribute to docker and specifies an image stored on the GitHub Container Registry in the config block with the image attribute. The Redis job is the exception as it uses an official Redis image hosted on Docker Hub. By default, Nomad looks for images on Docker Hub so the full path including https:// is not necessary for the Redis job.
+
+**pytechco-redis.nomad.hcl** - This service job runs and exposes a Redis database as a Nomad service for the other application components to connect to. The jobspec sets the type to service, configures a Nomad service block to use Nomad's native service discovery, and creates a service named redis-svc.
+
+**pytechco-web.nomad.hcl** - This service jobs runs the web application frontend that displays the values stored in the database and the active employees. The jobspec sets the type to service and uses a static port of 5000 for the application. It also uses the nomadService built-in function to retrieve address and port information of the Redis database service.
+
+**pytechco-setup.nomad.hcl** - This parameterized batch job sets up the database with default values. You can dispatch it multiple times to reset the database. The jobspec sets the type to batch and has a parameterized block with a meta_required attribute that requires a value for budget when dispatching.
+
+**pytechco-employee.nomad.hcl** - This periodic batch job brings an employee online. It randomizes the employee's job type and other variables such as how long they work for and the rate at which they complete their tasks. The jobspec sets the type to batch and has a periodic block that sets the cron attribute to a value that will allow it to start a new job every 3 seconds.
+
+2. **Deploy the application:**
+Submit the database job.
